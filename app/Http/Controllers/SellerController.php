@@ -178,7 +178,7 @@ class SellerController extends Controller
         }
 
 
-        return redirect('/seller')->with('success', 'Seller has been updated.');
+        return redirect('/seller/list')->with('success', 'Seller has been updated.');
 
 
     }

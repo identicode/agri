@@ -64,6 +64,7 @@ Route::prefix('product')->group(function(){
 	Route::post('/', 'ProductController@store');
 	Route::put('/', 'ProductController@update');
 	Route::get('/delete/{id}', 'ProductController@destroy');
+	Route::get('/print/seller', 'ProductController@print');
 });
 
 Route::prefix('settings')->group(function(){

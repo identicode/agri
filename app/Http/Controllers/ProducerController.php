@@ -171,7 +171,7 @@ class ProducerController extends Controller
         }
 
 
-        return redirect('/producer')->with('success', 'Producer has been updated.');
+        return redirect('/producer/list')->with('success', 'Producer has been updated.');
     }
 
     /**

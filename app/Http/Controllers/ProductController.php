@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Product;
 use App\Stp;
+use App\Seller;
 
 class ProductController extends Controller
 {
@@ -100,5 +101,12 @@ class ProductController extends Controller
         Product::find($id)->delete();
         Stp::where('product_id', $id)->delete();
         return redirect()->back()->with('success', 'Product has been deleted.');
+    }
+
+    public function print()
+    {
+        $sellers = Seller::all();
+        return view('product.print')
+                ->with('sellers', $sellers);
     }
 }

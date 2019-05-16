@@ -34,6 +34,7 @@ Producer List
 	        <div class="ibox-title">
 	            <h5>Producer List</h5>
 	        </div>
+            
 	        <div class="ibox-content">
 
 	        	<div class="row">
@@ -58,7 +59,8 @@ Producer List
 			            <th>Name</th>
 			            <th>Address</th>
 			            <th>Category</th>
-			            <th>Products</th>
+                        <th>Products</th>
+			            <th>Farm Size</th>
 			            <th>Action</th>
 			        </tr>
 			        </thead>
@@ -76,6 +78,7 @@ Producer List
                                 <td>{{ $producer->address }}</td>
                                 <td>{{ @$producer->category->name }}</td>
                                 <td>{{ implode($arr, ', ') }}</td>
+                                <td>{{ $producer->farm }} sqm</td>
                                 <td>
                                     <a href="/producer/show/{{ $producer->id }}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</a>
                                     <a href="/producer/edit/{{ $producer->id }}" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i> Edit</a>

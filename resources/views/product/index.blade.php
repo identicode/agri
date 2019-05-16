@@ -32,7 +32,11 @@ Product
 	    <div class="ibox float-e-margins">
 	        <div class="ibox-title">
 	            <h5>Product List</h5>
+	            <div class="ibox-tools hidden-print">
+                    <a href="/product/print/seller" target="_blank" class="btn btn-success btn-xs"><i class="fa fa-print"></i> Print seller with products</a>
+                </div>
 	        </div>
+
 	        <div class="ibox-content">
 
 	            <div class="table-responsive">
@@ -128,7 +132,30 @@ $(document).ready(function(){
     $('.dataTables-example').DataTable({
         dom: '<"html5buttons"B>lTfgitp',
         buttons: [
-           
+           {
+                extend: 'print',
+                title: '',
+                customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).prepend(
+                            	'<h2 align="center">Product List</h2>'
+                        	);
+
+                        	$(win.document.body).prepend(
+                            	'<h1 align="center">System For Agricultural Local Entrepreneur</h1>'
+                        	);
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    },
+                autoPrint: false,
+                exportOptions: {
+                    columns: [ 0, 1 ]
+                }
+            }
         ]
     });
 
