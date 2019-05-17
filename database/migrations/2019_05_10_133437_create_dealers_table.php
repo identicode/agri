@@ -16,7 +16,7 @@ class CreateDealersTable extends Migration
         Schema::create('dealers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('product_id');
+            $table->string('img');
             $table->timestamps();
         });
     }

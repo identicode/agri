@@ -2,7 +2,7 @@
 
 {{-- VENDOR CSS --}}
 @section('css-top')
-<link href="{{ asset('vendor/chosen/chosen.css') }}" rel="stylesheet">
+
 @endsection
 
 {{-- CSS STYLE --}}
@@ -34,102 +34,113 @@ Producer Full Information
 	            <h5>Producer Full Information</h5>
 	        </div>
 	        <div class="ibox-content">
+
 	        	<div class="row">
-	        		<div class="col-lg-12">
-			        		<div class="form-row">
-						        <div class="form-group col-md-4">
-						            <label for="last-name"><strong>Last Name:</strong></label>
-						            <input readonly value="{{ $producer->lname }}" type="text" class="form-control" id="last-name" placeholder="Last Name" name="lname" required>
+	        		<div class="col-lg-9">
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div class="form-group col-sm-4">
+						            <label><strong>Last Name:</strong></label>
+						            <input readonly value="{{ $producer->lname }}" type="text" class="form-control">
+						        </div>
+						        <div class="form-group col-sm-4">
+						            <label><strong>First Name:</strong></label>
+						            <input readonly value="{{ $producer->fname }}" type="text" class="form-control">
+						        </div>
+						        <div class="form-group col-sm-4">
+						            <label><strong>Middle Name:</strong></label>
+						            <input readonly value="{{ $producer->mname }}" type="text" class="form-control">
+						        </div>
+	        				</div>
+	        			</div>
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div class="form-group col-sm-3">
+						            <label><strong>Birthday:</strong></label>
+						            <input readonly value="{{ $producer->birth }}" type="date" class="form-control">
 						        </div>
 
-						        <div class="form-group col-md-4">
-						            <label for="first-name"><strong>First Name:</strong></label>
-						            <input readonly value="{{ $producer->fname }}" type="text" class="form-control" id="first-name" placeholder="First Name" name="fname" required>
+						        <div class="form-group col-sm-3">
+						            <label><strong>Age:</strong></label>
+						            <input readonly value="{{ Carbon\Carbon::parse($producer->birth)->age }}" type="text" class="form-control">
 						        </div>
 
-						        <div class="form-group col-md-4">
-						            <label for="middle-name"><strong>Middle Name:</strong></label>
-						            <input readonly value="{{ $producer->mname }}" type="text" class="form-control" id="middle-name" placeholder="Middle Name" name="mname">
-						        </div>
-							</div>
-
-							<div class="form-row">
-						        <div class="form-group col-md-3">
-						            <label for="birthday"><strong>Birthday:</strong></label>
-						            <input readonly value="{{ $producer->birth }}" type="date" max="{{ date('Y-m-d', time()) }}" class="form-control" id="birthday" placeholder="Birthday" name="bday" required>
+						        <div class="form-group col-sm-3">
+						            <label><strong>Gender:</strong></label>
+						            <input readonly value="{{ $producer->gen }}" type="text" class="form-control">
 						        </div>
 
-						        <div class="form-group col-md-3">
-						            <label for="age"><strong>Age:</strong></label>
-						            <input readonly value="{{ $producer->age }}" type="number" class="form-control" id="age" placeholder="Age" name="age" required>
+						        <div class="form-group col-sm-3">
+						            <label><strong>Civil Status:</strong></label>
+						            <input readonly value="{{ $producer->civil }}" type="text" class="form-control">
+						        </div>      
+	        				</div>
+	        			</div>
+	        			<div class="row">
+	        				<div class="col-sm-12">
+
+						        <div class="form-group col-sm-6">
+						            <label><strong>Address:</strong></label>
+						            <input readonly value="{{ $producer->address }}" type="text" class="form-control">
 						        </div>
 
-						        <div class="form-group col-md-3">
-						            <label for="gender"><strong>Gender:</strong></label>
-						            <select readonly class="form-control" id="gender" name="gender">
-						            	<option @if($producer->gen == 'Male') selected @endif>Male</option>
-						            	<option @if($producer->gen == 'Female') selected @endif>Female</option>
-						            </select>
+						        <div class="form-group col-sm-3">
+						            <label><strong>Contact Number:</strong></label>
+						            <input readonly value="{{ $producer->cp }}" type="text" class="form-control">
 						        </div>
 
-						        <div class="form-group col-md-3">
-						            <label for="civil"><strong>Civil Status:</strong></label>
-						            <select readonly class="form-control" id="civil" name="civil">
-						            	<option @if($producer->civil == 'Single') selected @endif>Single</option>
-						            	<option @if($producer->civil == 'Married') selected @endif>Married</option>
-						            	<option @if($producer->civil == 'Widowed') selected @endif>Widowed</option>
-						            	<option @if($producer->civil == 'Separated') selected @endif>Separated</option>
-						            	<option @if($producer->civil == 'Annuled') selected @endif>Annuled</option>
-						            	<option @if($producer->civil == 'Divorced') selected @endif>Divorced</option>
-						            </select>
+						        <div class="form-group col-sm-3">
+						            <label><strong>Farm Lot:</strong></label>
+						            <input readonly value="{{ $producer->farm }}" type="text" class="form-control">
 						        </div>
-							</div>
-
-							<div class="form-row">
-						        <div class="form-group col-md-6">
-						            <label for="address"><strong>Address:</strong></label>
-						            <input readonly value="{{ $producer->address }}" type="text" class="form-control" id="address" placeholder="Address" name="address" required>
+	        				</div>
+	        			</div>
+	        			<div class="row">
+	        				<div class="col-lg-12">
+						        <div class="form-group col-sm-6">
+						            <label><strong>Category:</strong></label>
+						            <input readonly value="{{ $category }}" type="text" class="form-control">
 						        </div>
 
-						        <div class="form-group col-md-6">
-						            <label for="cp"><strong>Contact Number:</strong></label>
-						            <input readonly value="{{ $producer->cp }}" type="text" class="form-control" id="cp" placeholder="Contact Number" name="cp" required>
+						        <div class="form-group col-sm-6">
+						            <label><strong>Product:</strong></label>
+						            <input readonly value="{{ $product }}" type="text" class="form-control">
 						        </div>
-							</div>
+	        				</div>
+	        			</div>
 
-							<div class="form-row">
-						        <div class="form-group col-md-4">
-						            <label for="category-select"><strong>Category:</strong></label>
-						            <select disabled id="category-select" name="category" data-placeholder="Choose category" class="chosen-select form-control" style="width:100%;" tabindex="4">
-					                   	@foreach($categories as $cat)
-					                   		<option @if($producer->id == $cat->id) selected @endif value="{{ $cat->id }}">{{ $cat->name }}</option>
-					                   	@endforeach
-			                		</select>
-						        </div>
-
-						        <div class="form-group col-md-4">
-						            <label for="product"><strong>Products:</strong></label>
-						            <select disabled id="product-select" multiple name="product[]" data-placeholder="Choose product" class="chosen-select form-control" style="width:100%;" tabindex="4">
-					                   	@foreach($products as $product)
-					                   		<option @if(in_array($product->id, $ptpa) == true) selected @endif value="{{ $product->id }}">{{ $product->name }}</option>
-					                   	@endforeach
-			                		</select>
-						        </div>
-
-						        <div class="form-group col-md-4">
-						            <label for="dealer"><strong>Fam Lot (sqm):</strong></label>
-						            <input type="number" readonly value="{{ $producer->farm }}" class="form-control" id="farm" placeholder="Farm Lot" name="farm" required>
-						        </div>
-							</div>
-
-						
-							<div class="form-row hidden-print">
-						        <div class="form-group col-md-12">
-						            <a href="javascript:window.print()" type="submit" class="btn btn-success"><i class="fa fa-print"></i> Print</a>
-						        </div>
-							</div>
+	        			<div class="row">
+	        				<div class="col-lg-12">
+	        					<div class="form-row hidden-print">
+							        <div class="form-group col-md-12">
+							            <a href="javascript:window.print()" type="submit" class="btn btn-success"><i class="fa fa-print"></i> Print</a>
+							        </div>
+								</div>
+	        				</div>
+	        			</div>
+	        		</div>
+	        		<div class="col-lg-3">
+	        			<div class="row">
+	        				<div class="col-lg-12">
+	        					<center>
+	        						<img class="img-thumbnail" src="{{ asset('img/avatar') }}/{{ $producer->img }}" width="100px" height="100px">
+	        						<h3>(Producer Image)</h3>
+	        						<br>
+	        					</center>
+	        				</div>
+	        			</div>
+	        			<div class="clear-fix"></div>
+	        			<div class="row">
+	        				<div class="col-lg-12">
+	        					<center>
+	        						<img class="img-thumbnail" src="{{ asset('img/avatar') }}/{{ $producer->fimg }}" width="100px" height="100px">
+	        						<h3>(Farm Image)</h3>
+	        					</center>
+	        				</div>
+	        			</div>
 	        		</div>
 	        	</div>
+
 	        </div>
 	    </div>
 	</div>
@@ -139,14 +150,10 @@ Producer Full Information
 
 {{-- VENDOR JS --}}
 @section('js-top')
- <script src="{{ asset('vendor/chosen/chosen.jquery.js') }}"></script>
+
 @endsection
 
 {{-- JS SCRIPT --}}
 @section('js-bot')
-<script type="text/javascript">
-	$("#category-select").chosen();
-	$("#product-select").chosen();
-	$("#dealer-select").chosen();
-</script>
+
 @endsection

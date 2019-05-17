@@ -50,6 +50,10 @@
                     </div>
                 </li>
 
+                <li @if(strpos(url()->current(), request()->getHttpHost().'/dashboard') == true) class="active" @endif>
+                    <a href="/dashboard"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+                </li>
+
                 <li @if(strpos(url()->current(), request()->getHttpHost().'/seller') == true) class="active" @endif>
                     <a href="javascript:void(0)"><i class="fa fa-user"></i> <span class="nav-label">Seller</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
@@ -84,7 +88,7 @@
                     <ul class="nav nav-second-level collapse">
                         <li @if(strpos(url()->current(), request()->getHttpHost().'/settings/profile') == true) class="active" @endif><a href="/settings/profile">Profile</a></li>
                         <li @if(strpos(url()->current(), request()->getHttpHost().'/settings/account') == true) class="active" @endif><a href="/settings/account">Add Admin</a></li>
-                        <li @if(strpos(url()->current(), request()->getHttpHost().'/settings/logs') == true) class="active" @endif><a href="/settings/logs">Log-in Log</a></li>
+                        <li @if(strpos(url()->current(), request()->getHttpHost().'/settings/logs') == true) class="active" @endif><a href="/settings/logs">Logs</a></li>
                     </ul>
                 </li>
                 

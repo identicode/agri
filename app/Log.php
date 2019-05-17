@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model
 {
-    protected $fillable = ['user_id', 'ip'];
+    protected $fillable = ['user_id','action', 'ip'];
 
     public function user()
     {

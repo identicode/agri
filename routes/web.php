@@ -12,11 +12,11 @@
 */
 
 Route::get('/', function () {
-    return redirect('/seller/list');
+    return redirect('/dashboard');
 });
 
 Route::get('/home', function () {
-    return redirect('/seller/list');
+    return redirect('/dashboard');
 })->name('home');
 
 Auth::routes();

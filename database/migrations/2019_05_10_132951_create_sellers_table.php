@@ -18,14 +18,13 @@ class CreateSellersTable extends Migration
             $table->string('fname');
             $table->string('lname');
             $table->string('mname')->nullable();
-            $table->integer('age');
             $table->string('gen');
             $table->integer('birth');
             $table->string('address');
             $table->string('civil');
             $table->string('cp');
-            $table->integer('category_id');
             $table->integer('dealer_id');
+            $table->string('img')->default('default.svg');
             $table->timestamps();
         });
     }

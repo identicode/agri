@@ -3,6 +3,7 @@
 {{-- VENDOR CSS --}}
 @section('css-top')
 <link href="{{ asset('vendor/chosen/chosen.css') }}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{{ asset('vendor/croppie/croppie.css') }}">
 @endsection
 
 {{-- CSS STYLE --}}
@@ -56,17 +57,12 @@ Add Seller
 							</div>
 
 							<div class="form-row">
-						        <div class="form-group col-md-3">
+						        <div class="form-group col-md-4">
 						            <label for="birthday"><strong>Birthday:</strong></label>
 						            <input type="date" max="{{ date('Y-m-d', time()) }}" class="form-control" id="birthday" placeholder="Birthday" name="bday" required>
 						        </div>
 
-						        <div class="form-group col-md-3">
-						            <label for="age"><strong>Age:</strong></label>
-						            <input type="number" class="form-control" id="age" placeholder="Age" name="age" required>
-						        </div>
-
-						        <div class="form-group col-md-3">
+						        <div class="form-group col-md-4">
 						            <label for="gender"><strong>Gender:</strong></label>
 						            <select class="form-control" id="gender" name="gender">
 						            	<option>Male</option>
@@ -74,7 +70,7 @@ Add Seller
 						            </select>
 						        </div>
 
-						        <div class="form-group col-md-3">
+						        <div class="form-group col-md-4">
 						            <label for="civil"><strong>Civil Status:</strong></label>
 						            <select class="form-control" id="civil" name="civil" required>
 						            	<option>Single</option>
@@ -102,7 +98,7 @@ Add Seller
 							<div class="form-row">
 						        <div class="form-group col-md-4">
 						            <label for="category-select"><strong>Category:</strong></label>
-						            <select id="category-select" required name="category" data-placeholder="Choose category" class="chosen-select form-control" style="width:100%;" tabindex="4">
+						            <select id="category-select" required multiple name="category[]" data-placeholder="Choose category" class="chosen-select form-control" style="width:100%;" tabindex="4">
 					                   	@foreach($categories as $cat)
 					                   		<option value="{{ $cat->id }}">{{ $cat->name }}</option>
 					                   	@endforeach
@@ -128,12 +124,21 @@ Add Seller
 						        </div>
 							</div>
 
+							
+
+							<div class="form-row">
+								<div class="form-group col-md-4">
+						            <label for="dealer"><strong>Image:</strong></label>
+						            <input required type="hidden" id="crop-image" value="" name="image">
+                                	<input required class="form-control" type="file" name="upload_image" id="upload_image" accept="image/*" >
+						        </div>
+							</div>
+
 							<div class="form-row">
 						        <div class="form-group col-md-12">
 						            <div class="hr-line-dashed"></div>
 						        </div>
 							</div>
-
 
 							<div class="form-row">
 						        <div class="form-group col-md-12">
@@ -149,18 +154,90 @@ Add Seller
 	</div>
 	
 </div>
+
+
+<!-- Modal Image Cropper -->
+<div id="uploadimageModal" class="modal" role="dialog">
+ <div class="modal-dialog">
+  <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Upload & Crop Image</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+       <div class="col-md-12 text-center">
+        <div id="image_demo"></div>
+       </div>
+    </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success crop_image">Crop</button>
+        </div>
+     </div>
+    </div>
+</div><!-- /.modal -->
 @endsection
 
 {{-- VENDOR JS --}}
 @section('js-top')
- <script src="{{ asset('vendor/chosen/chosen.jquery.js') }}"></script>
+<script src="{{ asset('vendor/chosen/chosen.jquery.js') }}"></script>
+<script src="{{ asset('vendor/croppie/croppie.min.js') }}"></script>
+<script src="{{ asset('vendor/croppie/exif.js') }}"></script>
 @endsection
 
 {{-- JS SCRIPT --}}
 @section('js-bot')
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+	$image_crop = $('#image_demo').croppie({
+        enableExif: true,
+        viewport: {
+            width:150,
+            height:150,
+            type:'square' //circle
+        },
+        boundary:{
+            width:300,
+            height:300
+        }
+    });
+
+    $('#upload_image').on('change', function(){
+        var reader = new FileReader();
+        reader.onload = function (event) {
+        $image_crop.croppie('bind', {
+            url: event.target.result
+        }).then(function(){
+          console.log('jQuery bind complete');
+        });
+        }
+        reader.readAsDataURL(this.files[0]);
+        $('#uploadimageModal').modal('show');
+    });
+
+    $('.crop_image').click(function(event){
+        $image_crop.croppie('result', {
+            type: 'canvas',
+            size: 'viewport',
+            format: 'jpeg'
+        }).then(function(response){
+            $('#crop-image').val(response);
+            $('#uploadimageModal').modal('toggle');
+        })
+    });
+
+
+});
+</script>
+
 <script type="text/javascript">
 	$("#category-select").chosen();
 	$("#product-select").chosen();
 	$("#dealer-select").chosen();
 </script>
+
 @endsection

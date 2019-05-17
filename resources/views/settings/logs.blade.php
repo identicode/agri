@@ -13,7 +13,7 @@
 
 {{-- PAGE TITLE --}}
 @section('page-title')
-Log In
+Logs
 @endsection
 
 {{-- BREAD CRUMB --}}
@@ -42,6 +42,7 @@ Log In
                     <tr>
                         <th>Date</th>
                         <th>Name</th>
+                        <th>Action</th>
                         <th>IP Address</th>
                     </tr>
                     </thead>
@@ -50,6 +51,7 @@ Log In
                             <tr>
                                 <td>{{ $log->created_at }}</td>
                                 <td>{{ @$log->user->fname }} {{ @$log->user->lname }}</td>
+                                <td>{{ $log->action }}</td>
                                 <td>{{ $log->ip }}</td>
                             </tr>
                         @endforeach

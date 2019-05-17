@@ -45,6 +45,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $check = Product::where('name', $request->product)->get()->count();
+
+        if($check != 0){
+            return redirect()->back()->with('error', 'Product already added.');
+        }
+
         Product::create([
             'name' => $request->product
         ]);

@@ -54,7 +54,7 @@ Seller List
 			        <table class="table table-striped table-bordered table-hover dataTables-example" >
 			        <thead>
 			        <tr>
-			            <th>#</th>
+			            <th>Image</th>
 			            <th>Name</th>
 			            <th>Address</th>
 			            <th>Category</th>
@@ -64,27 +64,34 @@ Seller List
 			        </tr>
 			        </thead>
 			        <tbody>
-			        	@php($x = 1)
-			        	@foreach($sellers as $seller)
+			        @foreach($sellers as $seller)
 
-			        		@php($arr = array())
-			        		@foreach($seller->product as $product)
-			        			@php($arr[] = $product->product->name)
-			        		@endforeach
-			        		<tr>
-			        			<td>{{ $x++ }}</td>
-			        			<td>{{ $seller->lname }}, {{ $seller->fname }}</td>
-			        			<td>{{ $seller->address }}</td>
-			        			<td>{{ @$seller->category->name }}</td>
-			        			<td>{{ implode($arr, ', ') }}</td>
-			        			<td>{{ @$seller->dealer->name }}</td>
-			        			<td>
-			        				<a href="/seller/show/{{ $seller->id }}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</a>
+			        @php($arr = array())
+			        @foreach($seller->product as $product)
+	        			@php($arr[] = $product->product->name)
+	        		@endforeach
+
+	        		@php($arr2 = array())
+			        @foreach($seller->category as $category)
+	        			@php($arr2[] = $category->category->name)
+	        		@endforeach
+
+			        	<tr>
+			        		<td align="center">
+			        			<img src="{{ asset('img/avatar') }}/{{ $seller->img }}" class="" width="50px" height="50px">
+			        		</td>
+			        		<td>{{ $seller->lname }}, {{ $seller->fname }}</td>
+			        		<td>{{ $seller->address }}</td>
+			        		<td>{{ implode($arr2, ', ') }}</td>
+			        		<td>{{ implode($arr, ', ') }}</td>
+			        		<td>{{ @$seller->dealer->name }}</td>
+			        		<td>
+			        			<a href="/seller/show/{{ $seller->id }}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</a>
 			        				<a href="/seller/edit/{{ $seller->id }}" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i> Edit</a>
 			        				<button onclick="deleteSeller('{{ $seller->id }}')" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>
-			        			</td>
-			        		</tr>
-			        	@endforeach
+			        		</td>
+			        	</tr>
+			        @endforeach
 			        </tbody>
 			        </table>
 	            </div>
@@ -132,7 +139,9 @@ $(document).ready(function(){
                     },
                 autoPrint: false,
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5 ]
+                    columns: [ 0, 1, 2, 3, 4, 5 ],
+                    stripHtml: false
+
                 }
             }
         ]

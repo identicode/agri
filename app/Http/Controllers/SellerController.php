@@ -9,6 +9,10 @@ use App\Category;
 use App\Product;
 use App\Dealer;
 use App\Stp;
+use App\Stc;
+use App\Log;
+
+use Auth;
 
 class SellerController extends Controller
 {
@@ -55,18 +59,33 @@ class SellerController extends Controller
      */
     public function store(Request $request)
     {
+        // Validating image
+        if($request->image == "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCADIAMgDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AJ/4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z"){
+           $imageName = 'default.svg';
+        }else{
+            
+            //Image Decoding
+            $image = $request->image;
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = mt_rand().time().".jpg";
+            $destination = public_path()."/img/avatar/".$imageName;
+            $actualImage = base64_decode($image);
+            $move = file_put_contents($destination, $actualImage);
+
+        }
+
         $seller = Seller::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
             'mname' => $request->mname,
             'birth' => $request->bday,
-            'age' => $request->age,
             'gen' => $request->gender,
             'civil' => $request->civil,
             'address' => $request->address,
             'cp' => $request->cp,
-            'category_id' => $request->category,
-            'dealer_id' => $request->dealer
+            'dealer_id' => $request->dealer,
+            'img' => $imageName
         ]);
 
         foreach($request->product as $product){
@@ -76,6 +95,19 @@ class SellerController extends Controller
 
             ]);
         }
+
+        foreach($request->category as $category){
+            Stc::create([
+                'seller_id' => $seller->id,
+                'category_id' => $category
+            ]);
+        }
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Add seller - '.$seller->lname.", ".$seller->fname,
+            'ip' => $request->getClientIp()
+        ]);
 
         return redirect()->back()->with('success', 'Seller has been added.');
     }
@@ -88,27 +120,25 @@ class SellerController extends Controller
      */
     public function show($id)
     {
-        $seller = Seller::find($id);
-        $dealers = Dealer::all();
-        $categories = Category::all();
-        $products = Product::all();
+        $seller = Seller::with('category.category', 'product.product', 'dealer')->where('id', $id)->get()->first();
 
-        $stp = Stp::where('seller_id', $id)->get();
+        $catarr = array();
 
-        $stpa = array();
-
-        foreach($stp as $st){
-            $stpa[] = $st->product_id;
+        foreach($seller->category as $category){
+            $catarr[] = $category->category->name; 
         }
 
+        $prodarr = array();
+
+        foreach($seller->product as $product){
+            $prodarr[] = $product->product->name; 
+        }
 
 
         return view('seller.view')
                 ->with('seller', $seller)
-                ->with('stpa', $stpa)
-                ->with('dealers', $dealers)
-                ->with('products', $products)
-                ->with('categories', $categories);
+                ->with('category', implode(', ', $catarr))
+                ->with('product', implode(', ', $prodarr));
     }
 
     /**
@@ -132,11 +162,21 @@ class SellerController extends Controller
             $stpa[] = $st->product_id;
         }
 
+        $stc = Stc::where('seller_id', $id)->get();
+
+        $stca = array();
+
+        foreach($stc as $sc){
+            $stca[] = $sc->category_id;
+        }
+
+        
 
 
         return view('seller.edit')
                 ->with('seller', $seller)
                 ->with('stpa', $stpa)
+                ->with('stca', $stca)
                 ->with('dealers', $dealers)
                 ->with('products', $products)
                 ->with('categories', $categories);
@@ -151,23 +191,41 @@ class SellerController extends Controller
      */
     public function update(Request $request, $id)
     {
+       
         $seller = Seller::find($id);
 
-        Stp::where('seller_id', $id)->delete();
+         // check image
+        if($request->image == "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCADIAMgDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AJ/4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z"){
+           $seller->img = 'default.svg';
+        }
+
+        if($request->image != ''){
+            //Image Decoding
+            $image = $request->image;
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = mt_rand().time().".jpg";
+            $destination = public_path()."/img/avatar/".$imageName;
+            $actualImage = base64_decode($image);
+            $move = file_put_contents($destination, $actualImage);
+            $seller->img = $imageName;
+        }
 
         $seller->fname = $request->fname;
         $seller->lname = $request->lname;
         $seller->mname = $request->mname;
-        $seller->age = $request->age;
         $seller->gen = $request->gender;
         $seller->birth = $request->bday;
         $seller->address = $request->address;
         $seller->civil = $request->civil;
         $seller->cp = $request->cp;
-        $seller->category_id = $request->category;
         $seller->dealer_id = $request->dealer;
+        
 
         $seller->save();
+
+        Stp::where('seller_id', $id)->delete();
+        Stc::where('seller_id', $id)->delete();
 
         foreach($request->product as $product){
             Stp::create([
@@ -176,6 +234,20 @@ class SellerController extends Controller
 
             ]);
         }
+
+        foreach($request->category as $category){
+            Stc::create([
+                'seller_id' => $id,
+                'category_id' => $category
+
+            ]);
+        }
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Update seller - '.$seller->lname.", ".$seller->fname,
+            'ip' => $request->getClientIp()
+        ]);
 
 
         return redirect('/seller/list')->with('success', 'Seller has been updated.');
@@ -191,8 +263,17 @@ class SellerController extends Controller
      */
     public function destroy($id)
     {
-        Seller::find($id)->delete();
+        $seller = Seller::find($id);
         Stp::where('seller_id', $id)->delete();
+
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Delete seller - '.$seller->lname.", ".$seller->fname,
+            'ip' => $request->getClientIp()
+        ]);
+
+        $seller->delete();
 
         return redirect()->back()->with('success', 'Seller has beed deleted.');
     }

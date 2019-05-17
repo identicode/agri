@@ -34,106 +34,97 @@ Seller Full Information
 	            <h5>Seller Full Information</h5>
 	        </div>
 	        <div class="ibox-content">
+
 	        	<div class="row">
-	        		<div class="col-lg-12">
-			        		<div class="form-row">
-						        <div class="form-group col-md-4">
+
+	        		<div class="col-sm-8">
+
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div class="form-group col-sm-4">
 						            <label for="last-name"><strong>Last Name:</strong></label>
-						            <input readonly value="{{ $seller->lname }}" type="text" class="form-control" id="last-name" placeholder="Last Name" name="lname" required>
+						            <input readonly value="{{ $seller->lname }}" type="text" class="form-control">
 						        </div>
+						        <div class="form-group col-sm-4">
+						            <label for="last-name"><strong>First Name:</strong></label>
+						            <input readonly value="{{ $seller->fname }}" type="text" class="form-control">
+						        </div>
+						        <div class="form-group col-sm-4">
+						            <label for="last-name"><strong>Middle Name:</strong></label>
+						            <input readonly value="{{ $seller->mname }}" type="text" class="form-control">
+						        </div>
+	        				</div>
+	        			</div>
 
-						        <div class="form-group col-md-4">
-						            <label for="first-name"><strong>First Name:</strong></label>
-						            <input readonly value="{{ $seller->fname }}" type="text" class="form-control" id="first-name" placeholder="First Name" name="fname" required>
+	        			<div class="row">
+	        				<div class="col-sm-12">
+	        					<div class="form-group col-sm-3">
+						            <label for="last-name"><strong>Birthday:</strong></label>
+						            <input readonly value="{{ $seller->birth }}" type="text" class="form-control">
 						        </div>
+						        <div class="form-group col-sm-3">
+						            <label for="last-name"><strong>Age:</strong></label>
+						            <input readonly value="{{ Carbon\Carbon::parse($seller->birth)->age }}" type="text" class="form-control">
+						        </div>
+						        <div class="form-group col-sm-3">
+						            <label for="last-name"><strong>Gender:</strong></label>
+						            <input readonly value="{{ $seller->gen }}" type="text" class="form-control">
+						        </div>
+						        <div class="form-group col-sm-3">
+						            <label for="last-name"><strong>Civil Status:</strong></label>
+						            <input readonly value="{{ $seller->civil }}" type="text" class="form-control">
+						        </div>
+	        				</div>
+	        			</div>
+	        		</div>
 
-						        <div class="form-group col-md-4">
-						            <label for="middle-name"><strong>Middle Name:</strong></label>
-						            <input readonly value="{{ $seller->mname }}" type="text" class="form-control" id="middle-name" placeholder="Middle Name" name="mname">
-						        </div>
-							</div>
-
-							<div class="form-row">
-						        <div class="form-group col-md-3">
-						            <label for="birthday"><strong>Birthday:</strong></label>
-						            <input readonly value="{{ $seller->birth }}" type="date" max="{{ date('Y-m-d', time()) }}" class="form-control" id="birthday" placeholder="Birthday" name="bday" required>
-						        </div>
-
-						        <div class="form-group col-md-3">
-						            <label for="age"><strong>Age:</strong></label>
-						            <input readonly value="{{ $seller->age }}" type="number" class="form-control" id="age" placeholder="Age" name="age" required>
-						        </div>
-
-						        <div class="form-group col-md-3">
-						            <label for="gender"><strong>Gender:</strong></label>
-						            <select readonly class="form-control" id="gender" name="gender">
-						            	<option @if($seller->gen == 'Male') selected @endif>Male</option>
-						            	<option @if($seller->gen == 'Female') selected @endif>Female</option>
-						            </select>
-						        </div>
-
-						        <div class="form-group col-md-3">
-						            <label for="civil"><strong>Civil Status:</strong></label>
-						            <select readonly class="form-control" id="civil" name="civil">
-						            	<option @if($seller->civil == 'Single') selected @endif>Single</option>
-						            	<option @if($seller->civil == 'Married') selected @endif>Married</option>
-						            	<option @if($seller->civil == 'Widowed') selected @endif>Widowed</option>
-						            	<option @if($seller->civil == 'Separated') selected @endif>Separated</option>
-						            	<option @if($seller->civil == 'Annuled') selected @endif>Annuled</option>
-						            	<option @if($seller->civil == 'Divorced') selected @endif>Divorced</option>
-						            </select>
-						        </div>
-							</div>
-
-							<div class="form-row">
-						        <div class="form-group col-md-6">
-						            <label for="address"><strong>Address:</strong></label>
-						            <input readonly value="{{ $seller->address }}" type="text" class="form-control" id="address" placeholder="Address" name="address" required>
-						        </div>
-
-						        <div class="form-group col-md-6">
-						            <label for="cp"><strong>Contact Number:</strong></label>
-						            <input readonly value="{{ $seller->cp }}" type="text" class="form-control" id="cp" placeholder="Contact Number" name="cp" required>
-						        </div>
-							</div>
-
-							<div class="form-row">
-						        <div class="form-group col-md-4">
-						            <label for="category-select"><strong>Category:</strong></label>
-						            <select disabled id="category-select" name="category" data-placeholder="Choose category" class="chosen-select form-control" style="width:100%;" tabindex="4">
-					                   	@foreach($categories as $cat)
-					                   		<option @if($seller->id == $cat->id) selected @endif value="{{ $cat->id }}">{{ $cat->name }}</option>
-					                   	@endforeach
-			                		</select>
-						        </div>
-
-						        <div class="form-group col-md-4">
-						            <label for="product"><strong>Products:</strong></label>
-						            <select disabled id="product-select" multiple name="product[]" data-placeholder="Choose product" class="chosen-select form-control" style="width:100%;" tabindex="4">
-					                   	@foreach($products as $product)
-					                   		<option @if(in_array($product->id, $stpa) == true) selected @endif value="{{ $product->id }}">{{ $product->name }}</option>
-					                   	@endforeach
-			                		</select>
-						        </div>
-
-						        <div class="form-group col-md-4">
-						            <label for="dealer"><strong>Dealer:</strong></label>
-						            <select disabled id="dealer-select" name="dealer" data-placeholder="Choose dealer" class="chosen-select form-control" style="width:100%;" tabindex="4">
-					                   	@foreach($dealers as $dealer)
-					                   		<option @if($seller->id == $dealer->id) selected @endif value="{{ $dealer->id }}">{{ $dealer->name }}</option>
-					                   	@endforeach
-			                		</select>
-						        </div>
-							</div>
-
-						
-							<div class="form-row hidden-print">
-						        <div class="form-group col-md-12">
-						            <a href="javascript:window.print()" type="submit" class="btn btn-success"><i class="fa fa-print"></i> Print</a>
-						        </div>
-							</div>
+	        		<div class="col-sm-4">
+	        			<center>
+	        				<img src="{{ asset('img/avatar') }}/{{ $seller->img }}">
+	        			</center>
 	        		</div>
 	        	</div>
+
+	        	<div class="row">
+	        		<div class="col-lg-12">
+	        			<div class="form-group col-sm-6">
+				            <label for="last-name"><strong>Contact Number:</strong></label>
+				            <input readonly value="{{ $seller->cp }}" type="text" class="form-control">
+				        </div>
+				        <div class="form-group col-sm-6">
+				            <label for="last-name"><strong>Address:</strong></label>
+				            <input readonly value="{{ $seller->address }}" type="text" class="form-control">
+				        </div>
+	        		</div>
+	        	</div>
+
+	        	<div class="row">
+	        		<div class="col-lg-12">
+	        			<div class="form-group col-sm-4">
+				            <label for="last-name"><strong>Category:</strong></label>
+				            <input readonly value="{{ $category }}" type="text" class="form-control">
+				        </div>
+				        <div class="form-group col-sm-4">
+				            <label for="last-name"><strong>Products:</strong></label>
+				            <input readonly value="{{ $product }}" type="text" class="form-control">
+				        </div>
+				        <div class="form-group col-sm-4">
+				            <label for="last-name"><strong>Dealer:</strong></label>
+				            <input readonly value="{{ $seller->dealer->name }}" type="text" class="form-control">
+				        </div>
+	        		</div>
+	        	</div>
+
+	        	<div class="row">
+	        		<div class="col-lg-12">
+	        			<div class="form-row hidden-print">
+					        <div class="form-group col-sm-12">
+					            <a href="javascript:window.print()" type="submit" class="btn btn-success"><i class="fa fa-print"></i> Print</a>
+					        </div>
+						</div>
+	        		</div>
+	        	</div>
+
 	        </div>
 	    </div>
 	</div>

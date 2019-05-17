@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dealer extends Model
 {
-    protected $fillable = ['name', 'product_id'];
+    protected $fillable = ['name', 'img'];
 
     public function product()
     {
-    	return $this->belongsTo('App\Product', 'product_id');
+    	return $this->hasMany('App\Dtp', 'dealer_id');
     }
 }

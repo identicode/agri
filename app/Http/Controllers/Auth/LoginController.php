@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/seller/list';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -49,6 +49,7 @@ class LoginController extends Controller
     {
         Log::create([
             'user_id' => $user->id,
+            'action' => 'Sign-in in the system.',
             'ip' => $request->getClientIp()
         ]);
     }

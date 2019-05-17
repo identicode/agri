@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Category;
+use App\Log;
+
+use Auth;
 
 class CategoryController extends Controller
 {
@@ -43,8 +46,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $check = Category::where('name', $request->category)->get()->count();
+
+        if($check != 0){
+            return redirect()->back()->with('error', 'Category already added.');
+        }
+
         Category::create([
             'name' => $request->category
+        ]);
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Create category - '.$request->category,
+            'ip' => $request->getClientIp()
         ]);
 
         return redirect()->back()->with('success', 'Category has been added.');
@@ -85,6 +100,12 @@ class CategoryController extends Controller
         $update->name = $request->name;
         $update->save();
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Update category - '.$request->name,
+            'ip' => $request->getClientIp()
+        ]);
+
         return redirect()->back()->with('success', 'Category has been updated.');
     }
 
@@ -96,7 +117,16 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        Category::find($id)->delete();
+        $cat = Category::find($id);
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Delete category - '.$cat->name,
+            'ip' => $request->getClientIp()
+        ]);
+
+        $cat->delete();
+
         return redirect()->back()->with('success', 'Category has been deleted.');
     }
 }

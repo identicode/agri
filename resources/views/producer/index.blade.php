@@ -72,12 +72,18 @@ Producer List
                             @foreach($producer->product as $product)
                                 @php($arr[] = $product->product->name)
                             @endforeach
+
+                            @php($arr2 = array())
+                            @foreach($producer->category as $category)
+                                @php($arr2[] = $category->category->name)
+                            @endforeach
+
                             <tr>
                                 <td>{{ $x++ }}</td>
                                 <td>{{ $producer->lname }}, {{ $producer->fname }}</td>
                                 <td>{{ $producer->address }}</td>
-                                <td>{{ @$producer->category->name }}</td>
-                                <td>{{ implode($arr, ', ') }}</td>
+                                <td>{{ @implode($arr2, ', ') }}</td>
+                                <td>{{ @implode($arr, ', ') }}</td>
                                 <td>{{ $producer->farm }} sqm</td>
                                 <td>
                                     <a href="/producer/show/{{ $producer->id }}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View</a>
